@@ -110,40 +110,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3D Tilt Effect for Photo Cards
     const cards = document.querySelectorAll('.image-container');
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / 10;
-            const rotateY = (centerX - x) / 10;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    if (!isTouchDevice) {
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+            });
         });
+    }
 
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
-        });
-    });
-
-    // Sparkle Mouse Trail
-    window.addEventListener('mousemove', (e) => {
-        if (Math.random() > 0.1) return; // Limit particles for performance
+    // Sparkle Trail
+    const spawnSparkle = (x, y) => {
+        if (Math.random() > 0.1) return;
         const sparkle = document.createElement('div');
         sparkle.className = 'sparkle';
-        sparkle.style.left = e.clientX + 'px';
-        sparkle.style.top = e.clientY + 'px';
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = y + 'px';
         document.body.appendChild(sparkle);
         setTimeout(() => sparkle.remove(), 800);
+    };
+
+    window.addEventListener('mousemove', (e) => spawnSparkle(e.clientX, e.clientY));
+    window.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        spawnSparkle(touch.clientX, touch.clientY);
     });
 
     // Love Letter Reveal
     const envelope = document.getElementById('envelope');
     if (envelope) {
-        envelope.addEventListener('click', () => {
-            envelope.classList.toggle('open');
+        const toggleEnvelope = () => envelope.classList.toggle('open');
+        envelope.addEventListener('click', toggleEnvelope);
+        envelope.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            toggleEnvelope();
         });
     }
 

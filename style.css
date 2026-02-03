@@ -15,7 +15,17 @@
     padding: 0;
     box-sizing: border-box;
     cursor: none;
-    /* Hide default cursor for custom cursor */
+}
+
+@media (hover: none) and (pointer: coarse) {
+    * {
+        cursor: auto !important;
+    }
+
+    .cursor-dot,
+    .cursor-outline {
+        display: none !important;
+    }
 }
 
 body {
@@ -386,6 +396,8 @@ header {
 
 .envelope {
     width: 300px;
+    max-width: 85vw;
+    /* Responsive width for mobile */
     height: 200px;
     background: #fdf5e6;
     position: relative;
@@ -393,6 +405,7 @@ header {
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(0, 0, 0, 0.05);
+    margin: 0 auto;
 }
 
 .envelope.open {
@@ -463,5 +476,14 @@ header {
     .button-group {
         flex-direction: column;
         gap: 1.5rem;
+    }
+
+    .yay {
+        font-size: 5rem;
+        /* Scale down for mobile */
+    }
+
+    .romantic-title {
+        font-size: clamp(3rem, 12vw, 5rem);
     }
 }
